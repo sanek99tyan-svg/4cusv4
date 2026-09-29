@@ -50,6 +50,22 @@ try {
         header('Location: /admin/?m=gallery&saved=1'); exit;
     }
 
+    if ($action === 'gallery_update') {
+        $id = (int)($_POST['id'] ?? 0);
+        $stmt = db()->prepare('UPDATE gallery SET title=?, category=?, description=?, image_url=?, link_url=?, sort_order=?, active=? WHERE id=?');
+        $stmt->execute([
+            trim($_POST['title'] ?? ''),
+            trim($_POST['category'] ?? ''),
+            trim($_POST['description'] ?? ''),
+            trim($_POST['image_url'] ?? ''),
+            trim($_POST['link_url'] ?? ''),
+            (int)($_POST['sort_order'] ?? 0),
+            isset($_POST['active']) ? 1 : 0,
+            $id
+        ]);
+        header('Location: /admin/?m=gallery&saved=1'); exit;
+    }
+
     if ($action === 'gallery_delete') {
         $stmt = db()->prepare('SELECT image_url FROM gallery WHERE id=?');
         $stmt->execute([(int)($_POST['id']??0)]);
