@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-return [
+$config = [
     'db' => [
         'host' => getenv('FOURCUS_DB_HOST') ?: '127.0.0.1',
         'port' => getenv('FOURCUS_DB_PORT') ?: '3306',
@@ -18,3 +18,11 @@ return [
         'session_name' => 'fourcus_admin',
     ],
 ];
+
+$local = __DIR__ . '/config.local.php';
+if (is_file($local)) {
+    $localConfig = require $local;
+    if (is_array($localConfig)) $config = array_replace_recursive($config, $localConfig);
+}
+
+return $config;
