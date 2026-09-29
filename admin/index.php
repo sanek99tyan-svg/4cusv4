@@ -53,7 +53,22 @@ $counts = [
 <?php if($module==='gallery'):?>
 <section class="panel"><div class="panel-head"><div><h2>Галерея</h2><p>Добавляйте изображения с компьютера или по URL.</p></div></div>
 <form method="post" action="/admin/save.php" enctype="multipart/form-data" class="grid-form"><input type="hidden" name="csrf" value="<?=e(csrf_token())?>"><input type="hidden" name="action" value="gallery_add"><label>Название<input name="title" required></label><label>Категория<input name="category"></label><label class="wide">Описание<textarea name="description" rows="3"></textarea></label><label>Фото URL<input name="image_url" placeholder="https://..."></label><label>Или загрузить<input type="file" name="image" accept="image/jpeg,image/png,image/webp,image/gif"></label><label>Ссылка проекта<input name="link_url"></label><label>Порядок<input type="number" name="sort_order" value="0"></label><div class="wide"><button class="btn primary">Добавить</button></div></form>
-<div class="gallery-admin"><?php foreach($gallery as $g):?><article><div class="thumb"><?php if($g['image_url']):?><img src="<?=e($g['image_url'])?>" alt=""><?php endif;?></div><div><strong><?=e($g['title'])?></strong><small><?=e($g['category'])?></small></div><form method="post" action="/admin/save.php" onsubmit="return confirm('Удалить?')"><input type="hidden" name="csrf" value="<?=e(csrf_token())?>"><input type="hidden" name="action" value="gallery_delete"><input type="hidden" name="id" value="<?=e((string)$g['id'])?>"><button class="btn danger">Удалить</button></form></article><?php endforeach;?></div></section>
+<div class="gallery-admin"><?php foreach($gallery as $g):?><article class="gallery-edit-card">
+<form method="post" action="/admin/save.php" class="gallery-edit-form">
+<input type="hidden" name="csrf" value="<?=e(csrf_token())?>">
+<input type="hidden" name="action" value="gallery_update">
+<input type="hidden" name="id" value="<?=e((string)$g['id'])?>">
+<div class="thumb"><?php if($g['image_url']):?><img src="<?=e($g['image_url'])?>" alt=""><?php endif;?></div>
+<label>Название<input name="title" value="<?=e($g['title'])?>" required></label>
+<label>Категория<input name="category" value="<?=e($g['category'])?>"></label>
+<label class="wide">Описание<textarea name="description" rows="2"><?=e($g['description'])?></textarea></label>
+<label>Фото URL<input name="image_url" value="<?=e($g['image_url'])?>"></label>
+<label>Ссылка<input name="link_url" value="<?=e($g['link_url'])?>"></label>
+<label>Порядок<input type="number" name="sort_order" value="<?=e((string)$g['sort_order'])?>"></label>
+<label class="switchline"><input type="checkbox" name="active" value="1" <?=$g['active']?'checked':''?>> Показывать</label>
+<div class="gallery-actions"><button class="btn primary">Сохранить</button></form>
+<form method="post" action="/admin/save.php" onsubmit="return confirm('Удалить?')"><input type="hidden" name="csrf" value="<?=e(csrf_token())?>"><input type="hidden" name="action" value="gallery_delete"><input type="hidden" name="id" value="<?=e((string)$g['id'])?>"><button class="btn danger">Удалить</button></form></div>
+</article><?php endforeach;?></div></section>
 <?php endif;?>
 
 <?php if($module==='settings'):?>
