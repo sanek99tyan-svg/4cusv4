@@ -1,0 +1,33 @@
+server {
+    listen 80;
+    listen [::]:80;
+    server_name 4cus.team www.4cus.team;
+
+    root /var/www/4cus.team;
+    index index.php;
+
+    client_max_body_size 10M;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    error_page 404 /404.php;
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php8.3-fpm.sock;
+    }
+
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+
+    location ^~ /app/ {
+        deny all;
+    }
+
+    location = /install.sql {
+        deny all;
+    }
+}
